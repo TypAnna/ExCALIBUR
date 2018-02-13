@@ -1,1 +1,2 @@
 # ExCALIBUR
+See readme.pdf.
