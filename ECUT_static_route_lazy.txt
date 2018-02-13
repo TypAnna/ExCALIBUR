@@ -1,0 +1,137 @@
+Find out which interface has the MAC that corresponds to interface connected to OOB switch (commonly physical 1:3)
+Create file according to example below.
+Then do ifup <if-name>x file you need to deconfigure with "ifconfig <ifname> 0" first.
+You then need to be logged in via iDrac or other interface first of course!
+
+
+
+
+------------------------- /etc/network/interface.d/ifcfg-xxx------------------
+
+#EST override ******************************************************************
+auto eth2
+iface eth2 inet static
+address 10.85.4.36/24
+post-up route add -net 147.214.18.0/24 gw 10.85.4.1
+post-up route add -net 134.138.186.0/24 gw 10.85.4.1
+post-up route add -net 134.138.199.0/24 gw 10.85.4.1
+post-down route delete -net 147.214.18.0/24 gw 10.85.4.1
+post-down route delete -net 134.138.186.0/24 gw 10.85.4.1
+post-down route delete -net 134.138.199.0/24 gw 10.85.4.1
+
+------------------------- /etc/network/interface.d/ifcfg-xxx------------------
+#EST override ******************************************************************
+auto eno3
+iface eno3 inet static
+address 10.64.214.181/24
+post-up route add -net 147.214.18.0/24 gw 10.64.214.1
+post-up route add -net 134.138.186.0/24 gw 10.64.214.1
+post-up route add -net 134.138.199.0/24 gw 10.64.214.1
+post-up route add -net 10.221.17.0/24 gw 10.64.214.1
+post-up route add -net 10.64.215.0/24 gw 10.64.214.1
+post-down route delete -net 147.214.18.0/24 gw 10.64.214.1
+post-down route delete -net 134.138.186.0/24 gw 10.64.214.1
+post-down route delete -net 134.138.199.0/24 gw 10.64.214.1
+post-down route delete -net 10.221.17.0/24 gw 10.64.214.1
+post-down route delete -net 10.64.215.0/24 gw 10.64.214.1
+
+--------------------------/etc/network/interface.d/ifcfg-xxx--------------
+auto eth3
+iface eth3 inet static
+address 10.64.215.55/24
+post-up route add -net 147.214.18.0/24 gw 10.64.215.1
+post-up route add -net 134.138.186.0/24 gw 10.64.215.1
+post-up route add -net 134.138.199.0/24 gw 10.64.215.1
+post-up route add -net 10.221.17.0/24 gw 10.64.215.1
+post-up route add -net 10.64.214.0/24 gw 10.64.215.1
+post-down route delete -net 147.214.18.0/24 gw 10.64.215.1
+post-down route delete -net 134.138.186.0/24 gw 10.64.215.1
+post-down route delete -net 134.138.199.0/24 gw 10.64.215.1
+post-down route delete -net 10.221.17.0/24 gw 10.64.215.1
+post-down route delete -net 10.64.214.0/24 gw 10.64.215.1
+
+
+
+
+
+-----------------Iptables commands-------------------------------
+iptables -A INPUT -p tcp --dport ssh -s 0.0.0.0/0 -j ACCEPT
+iptables -A INPUT -p tcp --dport ssh -s 147.214.18.0/24 -j ACCEPT
+
+cd /etc/iptables/
+iptables-save > rules.v4  
+
+
+-----------------/etc/ssh/sshd_config change--------------
+
+Replace 
+"PermitRootLogin without-password"
+with
+"PermitRootLogin yes"
+
+service ssh restart
+
+
+
+----------------PI2 info---------------
+r630-098	1D:6E	eth3		215.177
+r630-099	1F:42	eth3		215.178
+r630-100	1C:E6	eth3		215.179
+r630-093	1E:5E	eth3		215.172
+r630-094	0D:B6	eth3 		215.173
+r630-095	0E:BA	eth3		215.174
+r630-096	26:E2	eth2		215.175
+r630-097	1A:1E	eth2		215.176
+r630-076	DD:8E	eth3		215.227
+r630-077	DE:02	eth3		215.228
+r630-078	DB:2A	eth3		215.229
+
+----------------PI6 info---------------
+r630-028	45:3A	eth3		214.216
+r630-029	47:FA	eth2		214.217
+r630-030	47:02	eth3		214.218
+r630-048	47:2A	eth3		214.221
+r630-049	4E:36	eth3		214.222
+r630-050	4D:E2	eth3		214.223
+r630-051	4B:B2	eth2		214.224
+r630-052
+r630-053
+r630-027
+r630-054	
+
+
+----------------TS7 info---------------
+r630-006	B6:DE	eth3		215.55
+r630-007	84:BE	eth2		215.56
+r630-008	B7:96	eth3		215.57
+r630-004	B5:F2	eth3		215.53
+r630-010	85:E6	eth3		215.59
+r630-009	B5:7E	eth3		215.58
+r630-005	86:52	eth2		215.54
+r630-079	2B:8A	eth2		215.83
+r630-106	33:D2	eth3		215.63
+r630-107	2B:46	eth2		215.64
+r630-108	34:46	eth3		215.65
+r630-109	34:EE	eth3		215.66
+r630-110	2B:96	eth2		215.67
+r630-111	2B:A6	eth3		215.81
+r630-112	2B:FA	eth3		215.82
+
+----------------TS8 info---------------
+r630-016	B4:36	eth4		215.94
+r630-020	76:26	eth3		215.98
+r630-021	84:A2	eth3		215.99
+r630-017	75:D2	eth3		215.95
+r630-018	76:0E	eth3		215.96
+r630-019	83:C2	eth3		215.97
+
+---------------TS9 info----------------
+r630-090	1C:42	eth3		215.142
+r630-091	1D:5A	eth2		215.143
+r630-092	28:6E	eth3		215.144
+r630-081	1C:EA	eth3		215.133
+r630-082	35:2A	eth3		215.134
+r630-083	35:1A	eth4		215.135
+r630-084	2C:56	eth3		215.136
+r630-085	2D:D6	eth2		215.137
+r630-086	2B:4A	eth3		215.138

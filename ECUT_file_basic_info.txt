@@ -1,0 +1,9 @@
+auto interfaceName
+iface interfaceName inet static
+address IpAddress/24
+post-up route add -net 147.214.18.0/24 gw splittedIp1
+post-up route add -net 134.138.186.0/24 gw splittedIp1
+post-up route add -net 134.138.199.0/24 gw splittedIp1
+post-down route delete -net 147.214.18.0/24 gw splittedIp1
+post-down route delete -net 134.138.186.0/24 gw splittedIp1
+post-down route delete -net 134.138.199.0/24 gw splittedIp1
