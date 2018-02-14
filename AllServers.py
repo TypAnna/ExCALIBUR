@@ -18,7 +18,7 @@ import sys
 
 class AllServers:
 
-	#constructor method that takes arguments
+	
         def __init__(self, ipCases, SMIpList, fileText, currentServer, IpCasesFile, ServerMacIp, ECUT, channelToTerminal, channelToPipe, pipeList, possibleExistence, booleanInit, booleanEx, booleanFin, iCounter, bStop):
 
                 self.ipCases = ipCases
@@ -38,7 +38,7 @@ class AllServers:
 		self.iCounter = iCounter
 		self.bStop = bStop
 
-	#constructor method without arguments.
+	
 	def __init__(self):
 
                 self.ipCases = 0
